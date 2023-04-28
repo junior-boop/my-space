@@ -1,27 +1,45 @@
-import { AllProducts, UniqueProduct } from "./api/testApi";
-import { Accueil, Res, notFoundResponse } from "./libs/responde";
-import Router from "./libs/router";
+import { AllProducts, UniqueProduct } from './api/testApi'
+import { Accueil, Res, notFoundResponse } from './libs/responde'
+import Router from './libs/router'
 
-export default {
-	async fetch(request, env, ctx) {
-		const router = new Router()
+addEventListener('fetch', (event) => {
+	event.respondWith(handleRequest(event.request))
+})
 
-		router.get('/', () => Accueil('je suis sur la page Accueil'))
-		router.get('/api', () => GetAllProducts(request))
-		router.all(notFoundResponse)
+/**
+ * Respond with hello worker text
+ * @param {Request} request
+ */
 
-		const response = await router.route(request)
+async function handleRequest(request) {
+	const router = new Router()
 
-		return response;
-	},
-};
+	router.get('/', () => Accueil('je suis sur la page Accueil'))
+	router.get('/api/?', () => GetAllProducts(request))
+	router.get('/api/.+', () => getUniqueProduct(request))
+	router.all(notFoundResponse)
+
+	const response = await router.route(request)
+
+	return response
+}
 
 const GetAllProducts = async (req) => {
 	const { products } = await AllProducts()
-	console.log(products)
 	return Res(JSON.stringify(products))
 }
 
-const getUniqueProduct = async () => {
-	const const { products } = await UniqueProduct()
+const getUniqueProduct = async (request) => {
+	
+	const url = new URL(request.url)
+	const path = url.pathname
+	const match = path.split('/')
+	const id = match[2]
+
+
+	const product = await UniqueProduct(id)
+	console.log(product, await UniqueProduct(id))
+
+	return Res(JSON.stringify(product))
+
 }

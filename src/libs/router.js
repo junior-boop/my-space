@@ -3,8 +3,8 @@
  * boolean indicating if the request uses that HTTP method,
  * header, host or referrer.
  */
-const Method = method => req =>
-	req.method.toLowerCase() === method.toLowerCase()
+const Method = method => req => req.method.toLowerCase() === method.toLowerCase()
+
 const Connect = Method('connect')
 const Delete = Method('delete')
 const Get = Method('get')
@@ -19,6 +19,7 @@ const Path = regExp => req => {
 	const url = new URL(req.url)
 	const path = url.pathname
 	const match = path.match(regExp) || []
+	
 	return match[0] === path
 }
 
