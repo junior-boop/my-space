@@ -1,0 +1,18 @@
+name = "my-space"
+main = "src/index.js"
+type = "webpack"
+webpack_config =  "webpack.config.js"
+compatibility_date = "2023-04-27"
+
+account_id = "3dfb67cc0cfcb086d3c2a4b3e90706d6"
+workers_dev = true
+
+[env.production]
+kv_namespaces = [
+    { binding = "Users_All", id = "b524afad4bce4d26978170a9a03d2c51" }
+]
+
+[env.staging]
+kv_namespaces = [
+    { binding = "Users_All_dev", id = "1e9b1306bfa042f3aa1005988992f3eb" }
+]
